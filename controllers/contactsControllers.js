@@ -9,7 +9,9 @@ const {
 
 const getContactsCtrl = async (req, res) => {
   const { _id } = req.user;
-  const data = await getContacts(_id);
+  const { page = 1, limit = 10, favorite } = req.query;
+
+  const data = await getContacts(_id, page, limit, favorite);
   res.status(200).json({ message: data });
 };
 

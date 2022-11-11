@@ -8,7 +8,7 @@ const addContactSchema = Joi.object({
       tlds: { allow: ["com", "net"] },
     })
     .required(),
-  phone: Joi.string().min(10).max(14),
+  phone: Joi.string().min(10),
   favorite: Joi.boolean(),
 });
 

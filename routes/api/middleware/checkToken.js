@@ -26,5 +26,3 @@ const checkToken = async (req, res, next) => {
 module.exports = {
   checkToken,
 };
-
-// зробити тру кетч
