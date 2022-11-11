@@ -18,11 +18,13 @@ const { checkToken } = require("./middleware/checkToken");
 
 const router = express.Router();
 
-router.get("/", checkToken, getContactsCtrl);
+router.use(checkToken);
+
+router.get("/", getContactsCtrl);
 
 router.get("/:contactId", getContactByIDCtrl);
 
-router.post("/", checkToken, validation(addContactSchema), postAddContactCtrl);
+router.post("/", validation(addContactSchema), postAddContactCtrl);
 
 router.delete("/:contactId", deleteContactCtrl);
 

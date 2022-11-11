@@ -2,7 +2,10 @@ const { Contact } = require("../models/contactsModel");
 
 const getContacts = async (id) => {
   try {
-    const data = await Contact.find({ owner: id });
+    const data = await Contact.find({ owner: id }).populate(
+      "owner",
+      "_id email subscription"
+    );
     return data;
   } catch (error) {
     console.log(error.message);
