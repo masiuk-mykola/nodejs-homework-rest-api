@@ -7,18 +7,13 @@ require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = async (email, password) => {
-  try {
-    const user = await User.findOne({ email });
-    if (user) {
-      throw new Conflict("Email in use");
-    }
-
+  const user = await User.findOne({ email });
+  if (!user) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({ email, password: hashedPassword });
     return newUser;
-  } catch (error) {
-    console.log(error.message);
   }
+  throw new Conflict("Email in use");
 };
 
 const login = async (email, password) => {
@@ -31,6 +26,8 @@ const login = async (email, password) => {
     id: user._id,
   };
   const token = jwt.sign(payload, JWT_SECRET);
+  await User.findOneAndUpdate({ email }, { token });
+
   return {
     token,
     user: {
@@ -40,7 +37,17 @@ const login = async (email, password) => {
   };
 };
 
+const logout = async (id) => {
+  const user = await User.findById(id);
+  console.log("user", user);
+  if (!user) {
+    throw new Unauthorized("Not authorized");
+  }
+  await User.findByIdAndUpdate(id, { token: null });
+};
+
 module.exports = {
   register,
   login,
+  logout,
 };
