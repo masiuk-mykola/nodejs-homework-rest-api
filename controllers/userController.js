@@ -15,7 +15,7 @@ const userStatusCtrl = async (req, res) => {
 
   const data = await updateUserStatus(_id, req.body);
   if (data) {
-    res.status(200).json({ message: data });
+    res.status(200).json({ data });
   } else {
     res.status(404).json({ message: "Not found" });
   }
