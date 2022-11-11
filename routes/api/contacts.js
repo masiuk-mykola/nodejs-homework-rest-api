@@ -14,14 +14,15 @@ const {
   patchFavoriteContactCtrl,
 } = require("../../controllers/contactsControllers");
 const { validation } = require("./middleware/validationBody");
+const { checkToken } = require("./middleware/checkToken");
 
 const router = express.Router();
 
-router.get("/", getContactsCtrl);
+router.get("/", checkToken, getContactsCtrl);
 
 router.get("/:contactId", getContactByIDCtrl);
 
-router.post("/", validation(addContactSchema), postAddContactCtrl);
+router.post("/", checkToken, validation(addContactSchema), postAddContactCtrl);
 
 router.delete("/:contactId", deleteContactCtrl);
 

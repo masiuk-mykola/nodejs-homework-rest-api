@@ -1,7 +1,13 @@
 // const { checkUser } = require("../service/currentUser");
 
 const currentUserCtrl = async (req, res) => {
-  console.log(req.user);
+  const { email, subscription } = req.user;
+  res.status(200).json({
+    user: {
+      email: email,
+      subscription: subscription,
+    },
+  });
 };
 
 module.exports = {
