@@ -1,6 +1,10 @@
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { Conflict } = require("http-errors");
+const { Conflict, Unauthorized } = require("http-errors");
 const { User } = require("../models/userModel");
+require("dotenv").config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = async (email, password) => {
   try {
@@ -17,6 +21,26 @@ const register = async (email, password) => {
   }
 };
 
+const login = async (email, password) => {
+  const user = await User.findOne({ email });
+  const isPasswordCompare = await bcrypt.compare(password, user.password);
+  if (!user || !isPasswordCompare) {
+    throw new Unauthorized("Email or password is wrong");
+  }
+  const payload = {
+    id: user._id,
+  };
+  const token = jwt.sign(payload, JWT_SECRET);
+  return {
+    token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
+  };
+};
+
 module.exports = {
   register,
+  login,
 };
