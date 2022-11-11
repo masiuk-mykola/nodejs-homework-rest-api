@@ -1,4 +1,4 @@
-// const { checkUser } = require("../service/currentUser");
+const { updateUserStatus } = require("../service/user");
 
 const currentUserCtrl = async (req, res) => {
   const { email, subscription } = req.user;
@@ -10,6 +10,18 @@ const currentUserCtrl = async (req, res) => {
   });
 };
 
+const userStatusCtrl = async (req, res) => {
+  const { _id } = req.user;
+
+  const data = await updateUserStatus(_id, req.body);
+  if (data) {
+    res.status(200).json({ message: data });
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
+};
+
 module.exports = {
   currentUserCtrl,
+  userStatusCtrl,
 };
