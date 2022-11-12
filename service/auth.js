@@ -39,7 +39,6 @@ const login = async (email, password) => {
 
 const logout = async (id) => {
   const user = await User.findById(id);
-  console.log("user", user);
   if (!user) {
     throw new Unauthorized("Not authorized");
   }
