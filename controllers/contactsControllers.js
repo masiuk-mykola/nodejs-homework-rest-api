@@ -8,7 +8,10 @@ const {
 } = require("../service/contacts");
 
 const getContactsCtrl = async (req, res) => {
-  const data = await getContacts();
+  const { _id } = req.user;
+  const { page = 1, limit = 10, favorite } = req.query;
+
+  const data = await getContacts(_id, page, limit, favorite);
   res.status(200).json({ message: data });
 };
 
@@ -23,7 +26,8 @@ const getContactByIDCtrl = async (req, res) => {
 };
 
 const postAddContactCtrl = async (req, res) => {
-  const data = await addContact(req.body);
+  const { _id } = req.user;
+  const data = await addContact({ ...req.body, owner: _id });
   res.status(201).json({ message: data });
 };
 

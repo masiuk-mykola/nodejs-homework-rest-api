@@ -14,8 +14,11 @@ const {
   patchFavoriteContactCtrl,
 } = require("../../controllers/contactsControllers");
 const { validation } = require("./middleware/validationBody");
+const { checkToken } = require("./middleware/checkToken");
 
 const router = express.Router();
+
+router.use(checkToken);
 
 router.get("/", getContactsCtrl);
 
