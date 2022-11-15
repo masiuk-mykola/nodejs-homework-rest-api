@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const gravatar = require("gravatar");
 const { Conflict, Unauthorized } = require("http-errors");
 const { User } = require("../models/userModel");
 require("dotenv").config();
@@ -10,7 +11,12 @@ const register = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ email, password: hashedPassword });
+    const avatar = gravatar.url(email);
+    const newUser = await User.create({
+      email,
+      password: hashedPassword,
+      avatarURL: avatar,
+    });
     return newUser;
   }
   throw new Conflict("Email in use");
