@@ -11,11 +11,11 @@ const register = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const avatar = gravatar.url(email);
+    const avatarURL = gravatar.url(email);
     const newUser = await User.create({
       email,
       password: hashedPassword,
-      avatarURL: avatar,
+      avatarURL,
     });
     return newUser;
   }
