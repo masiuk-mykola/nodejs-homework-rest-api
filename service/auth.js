@@ -24,6 +24,7 @@ const register = async (email, password) => {
 
 const login = async (email, password) => {
   const user = await User.findOne({ email });
+  console.log(user);
   const isPasswordCompare = await bcrypt.compare(password, user.password);
   if (!user || !isPasswordCompare) {
     throw new Unauthorized("Email or password is wrong");
