@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const gravatar = require("gravatar");
-const { Conflict, Unauthorized } = require("http-errors");
+const { Conflict, Unauthorized, NotFound } = require("http-errors");
 const { User } = require("../models/userModel");
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const register = async (email, password) => {
+const register = async (email, password, verificationToken) => {
   const user = await User.findOne({ email });
   if (!user) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -16,6 +16,7 @@ const register = async (email, password) => {
       email,
       password: hashedPassword,
       avatarURL,
+      verificationToken,
     });
     return newUser;
   }
@@ -23,9 +24,12 @@ const register = async (email, password) => {
 };
 
 const login = async (email, password) => {
-  const user = await User.findOne({ email });
-  console.log(user);
+  const user = await User.findOne({ email, verify: true });
+  if (!user) {
+    throw new Unauthorized("Email not verified");
+  }
   const isPasswordCompare = await bcrypt.compare(password, user.password);
+
   if (!user || !isPasswordCompare) {
     throw new Unauthorized("Email or password is wrong");
   }
@@ -52,8 +56,20 @@ const logout = async (id) => {
   await User.findByIdAndUpdate(id, { token: null });
 };
 
+const verifyUser = async (verificationToken) => {
+  const user = await User.findOne({ verificationToken });
+  if (!user) {
+    throw new NotFound("User not found");
+  }
+  await User.findByIdAndUpdate(user._id, {
+    verificationToken: null,
+    verify: true,
+  });
+};
+
 module.exports = {
   register,
   login,
   logout,
+  verifyUser,
 };

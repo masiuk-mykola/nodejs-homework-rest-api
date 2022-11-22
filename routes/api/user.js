@@ -3,6 +3,7 @@ const {
   logoutCtrl,
   loginCtrl,
   registerCtrl,
+  verifyUserCtrl,
 } = require("../../controllers/authControllers");
 const {
   currentUserCtrl,
@@ -23,6 +24,7 @@ const router = express.Router();
 router.patch("/avatars", checkToken, upload.single("avatar"), avatarCtrl);
 
 router.get("/current", checkToken, currentUserCtrl);
+router.get("/verify/:verificationToken", verifyUserCtrl);
 router.patch("/", checkToken, userStatusCtrl);
 router.post("/register", validation(registertSchema), registerCtrl);
 router.get("/login", validation(loginSchema), loginCtrl);
