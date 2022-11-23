@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const register = async (email, password, verificationToken) => {
+const register = async (email, password, verificationToken, subscription) => {
   const user = await User.findOne({ email });
   if (!user) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -17,6 +17,7 @@ const register = async (email, password, verificationToken) => {
       password: hashedPassword,
       avatarURL,
       verificationToken,
+      subscription,
     });
     return newUser;
   }

@@ -14,8 +14,13 @@ const verificationToken = uuidv4();
 
 const registerCtrl = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const data = await register(email, password, verificationToken);
+    const { email, password, subscription } = req.body;
+    const data = await register(
+      email,
+      password,
+      verificationToken,
+      subscription
+    );
 
     const msg = {
       to: email,
