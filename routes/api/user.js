@@ -4,6 +4,7 @@ const {
   loginCtrl,
   registerCtrl,
   verifyUserCtrl,
+  verifyUserEmailCtrl,
 } = require("../../controllers/authControllers");
 const {
   currentUserCtrl,
@@ -25,6 +26,7 @@ router.patch("/avatars", checkToken, upload.single("avatar"), avatarCtrl);
 
 router.get("/current", checkToken, currentUserCtrl);
 router.get("/verify/:verificationToken", verifyUserCtrl);
+router.post("/verify", verifyUserEmailCtrl);
 router.patch("/", checkToken, userStatusCtrl);
 router.post("/register", validation(registertSchema), registerCtrl);
 router.get("/login", validation(loginSchema), loginCtrl);

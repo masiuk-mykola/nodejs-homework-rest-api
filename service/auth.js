@@ -67,9 +67,15 @@ const verifyUser = async (verificationToken) => {
   });
 };
 
+const verifyEmail = async (email) => {
+  const user = await User.findOne({ email, verify: false });
+  return user;
+};
+
 module.exports = {
   register,
   login,
   logout,
   verifyUser,
+  verifyEmail,
 };
