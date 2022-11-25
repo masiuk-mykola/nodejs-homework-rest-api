@@ -8,6 +8,7 @@ const registertSchema = Joi.object({
     })
     .required(),
   password: Joi.string().min(8),
+  subscription: Joi.string(),
 });
 
 const loginSchema = Joi.object({
