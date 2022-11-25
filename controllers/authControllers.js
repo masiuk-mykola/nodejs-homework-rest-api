@@ -10,9 +10,9 @@ const {
   verifyEmail,
 } = require("../service/auth");
 
-const verificationToken = uuidv4();
-
 const registerCtrl = async (req, res) => {
+  const verificationToken = uuidv4();
+
   try {
     const { email, password, subscription } = req.body;
     const data = await register(
@@ -55,15 +55,15 @@ const verifyUserEmailCtrl = async (req, res) => {
   }
   const user = await verifyEmail(email);
   if (user) {
-    const msg = {
-      to: email,
-      from: "masiuk.mykola@gmail.com",
-      subject: "Verification email again",
-      text: `Please, verify your email following this link http://localhost:3000/api/users/verify/${verificationToken}`,
-      html: `<h2>Please, <a href='http://localhost:3000/api/users/verify/${verificationToken}'>verify</a> your email</h2>`,
-    };
+    // const msg = {
+    //   to: email,
+    //   from: "masiuk.mykola@gmail.com",
+    //   subject: "Verification email again",
+    //   text: `Please, verify your email following this link http://localhost:3000/api/users/verify/${verificationToken}`,
+    //   html: `<h2>Please, <a href='http://localhost:3000/api/users/verify/${verificationToken}'>verify</a> your email</h2>`,
+    // };
 
-    await sgMail.send(msg);
+    // await sgMail.send(msg);
 
     res.status(200).json({ message: "Verification email sent" });
   } else {

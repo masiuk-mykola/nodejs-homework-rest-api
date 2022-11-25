@@ -4,6 +4,8 @@ const gravatar = require("gravatar");
 const { Conflict, Unauthorized, NotFound } = require("http-errors");
 const { User } = require("../models/userModel");
 require("dotenv").config();
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -70,6 +72,17 @@ const verifyUser = async (verificationToken) => {
 
 const verifyEmail = async (email) => {
   const user = await User.findOne({ email, verify: false });
+  if (user) {
+    const msg = {
+      to: email,
+      from: "masiuk.mykola@gmail.com",
+      subject: "Verification email again",
+      text: `Please, verify your email following this link http://localhost:3000/api/users/verify/${user.verificationToken}`,
+      html: `<h2>Please, <a href='http://localhost:3000/api/users/verify/${user.verificationToken}'>verify</a> your email</h2>`,
+    };
+
+    await sgMail.send(msg);
+  }
   return user;
 };
 
